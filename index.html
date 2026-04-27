@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抗血 - 文字冒險</title>
+
+<style>
+body {
+    background: #0a0a0f;
+    color: #e6e6e6;
+    font-family: "Noto Sans TC", sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+#game {
+    max-width: 600px;
+    margin: auto;
+}
+
+.choice {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #666;
+    cursor: pointer;
+}
+.choice:hover {
+    background: #222;
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+    <h1>抗血</h1>
+    <div id="text">載入中...</div>
+    <div id="choices"></div>
+</div>
+
+<script>
+const story = {
+    start: {
+        text: "你醒來時，城市已經崩壞。遠處傳來低吼聲。",
+        choices: [
+            { text: "往聲音方向走", next: "danger" },
+            { text: "躲進建築物", next: "safe" }
+        ]
+    },
+    danger: {
+        text: "你遇到變異者，被攻擊。",
+        choices: [
+            { text: "反擊", next: "fight" },
+            { text: "逃跑", next: "start" }
+        ]
+    },
+    safe: {
+        text: "你暫時安全，但物資不足。",
+        choices: [
+            { text: "搜尋物資", next: "loot" },
+            { text: "休息", next: "end" }
+        ]
+    },
+    fight: {
+        text: "你成功擊退敵人。",
+        choices: [
+            { text: "繼續前進", next: "start" }
+        ]
+    },
+    loot: {
+        text: "你找到食物與水。",
+        choices: [
+            { text: "繼續生存", next: "start" }
+        ]
+    },
+    end: {
+        text: "你在黑暗中沉沉睡去...",
+        choices: []
+    }
+};
+
+function showScene(scene) {
+    document.getElementById("text").innerText = story[scene].text;
+    const choicesDiv = document.getElementById("choices");
+    choicesDiv.innerHTML = "";
+
+    story[scene].choices.forEach(choice => {
+        const btn = document.createElement("div");
+        btn.innerText = choice.text;
+        btn.className = "choice";
+        btn.onclick = () => showScene(choice.next);
+        choicesDiv.appendChild(btn);
+    });
+}
+
+showScene("start");
+</script>
+
+</body>
+</html>
